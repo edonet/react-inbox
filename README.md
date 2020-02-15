@@ -8,7 +8,8 @@ $ yarn add react-inbox
 
 ## Usage
 
-### Create state and action in `./store.js`:
+### Create state and action 
+in `./store.js`:
 ``` javascript
 import store from 'react-inbox';
 
@@ -23,7 +24,8 @@ export function add(num) {
 }
 ```
 
-### Use state and action in `./App.jsx`:
+### Use state and action 
+in `./App.jsx`:
 ``` javascript
 import React from 'react';
 import { useStore } from 'react-inbox';
