@@ -13,6 +13,8 @@
  *****************************************
  */
 import store from './store';
+import rAF from './rAF';
+import equal from './equal';
 import { useStore, observer } from './useStore';
 
 
@@ -22,4 +24,4 @@ import { useStore, observer } from './useStore';
  *****************************************
  */
 export default store;
-export { store, useStore, observer };
+export { store, useStore, observer, rAF, equal };
