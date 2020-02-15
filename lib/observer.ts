@@ -20,7 +20,7 @@ import rAF from './rAF';
  * 监听对象
  *****************************************
  */
-interface Listener {
+export interface Listener {
     handler?(): void;
 }
 
