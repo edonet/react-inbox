@@ -43,25 +43,28 @@ export default function store<T>(state: T): T {
                 return shouldUpdate;
             });
 
-        // 劫持属性
-        Object.defineProperty(proxy, key, {
-            set(value) {
+        // 设置属性
+        function set(value: T[keyof T]): void {
 
-                // 更新值
-                data = value;
+            // 更新值
+            data = value;
 
-                // 更新事件
-                ob.notify();
-            },
-            get() {
+            // 更新事件
+            ob.notify();
+        }
 
-                // 更新监听器
-                ob.subscribe();
+        // 获取属性
+        function get(): T[keyof T] {
 
-                // 返回数据
-                return data;
-            }
-        });
+            // 更新监听器
+            ob.subscribe();
+
+            // 返回数据
+            return data;
+        }
+
+        // 绑定属性
+        Object.defineProperty(proxy, key, { set, get });
     });
 
     // 返回结果

@@ -21,7 +21,9 @@ import { store, subscribe, nextTick } from '../';
  *****************************************
  */
 describe('inbox', () => {
-    test('store', async () => {
+
+    /* 创建状态 */
+    test('创建状态', async () => {
         let state = store({ name: '', value: 1, count: 0 }),
             cb = jest.fn(),
             cancel = subscribe(
