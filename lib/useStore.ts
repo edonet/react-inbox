@@ -13,7 +13,7 @@
  *****************************************
  */
 import { FC, createElement, useRef, useReducer, useEffect, ComponentClass } from 'react';
-import { addListener, removeListener } from './observer';
+import subscribe from './subscribe';
 
 
 /**
@@ -23,8 +23,8 @@ import { addListener, removeListener } from './observer';
  */
 interface Current<T> {
     data?: T;
+    cancel?(): void;
     refresh?(): void;
-    handler?(): void;
 }
 
 
@@ -34,44 +34,32 @@ interface Current<T> {
  *****************************************
  */
 export function useStore<T>(handler: () => T): T {
-    let ref = useRef<Current<T>>({}),
-        forceUpdate = useReducer((x: number) => x + 1, 0)[1];
+    let ref = useRef<Current<T>>({});
 
     // 初初化数据
-    if (ref.current.refresh === undefined) {
+    if (ref.current.cancel === undefined) {
+        ref.current.cancel = subscribe(() => {
 
-        // 初始化刷新函数
-        ref.current.refresh = () => {
-            addListener(ref.current);
+            // 要争取数据
             ref.current.data = handler();
-            removeListener(ref.current);
-        };
 
-        // 初始化监听函数
-        ref.current.handler = () => {
-            if (ref.current.refresh) {
-                ref.current.refresh();
-                forceUpdate();
-            }
-        };
-
-        // 获取数据
-        ref.current.refresh();
-    } else {
-        ref.current.handler = () => {
-            if (ref.current.refresh) {
-                ref.current.refresh();
-                forceUpdate();
-            }
-        };
+            // 刷新
+            ref.current.refresh && ref.current.refresh();
+        });
     }
+
+    // 设置刷新
+    ref.current.refresh = useReducer((x: number) => x + 1, 0)[1];
 
     // 卸载组件
     useEffect(() => {
         return () => {
-            ref.current.handler = undefined;
-            ref.current.refresh = undefined;
-            ref.current.data = undefined;
+            if (ref.current.cancel) {
+                ref.current.cancel();
+                ref.current.cancel = undefined;
+                ref.current.refresh = undefined;
+                ref.current.data = undefined;
+            }
         };
     }, []);
 

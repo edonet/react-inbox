@@ -1,7 +1,7 @@
 /**
  *****************************************
  * Created by edonet@163.com
- * Created on 2020-02-15 10:41:38
+ * Created on 2020-02-16 10:36:23
  *****************************************
  */
 'use strict';
@@ -9,21 +9,19 @@
 
 /**
  *****************************************
- * 加载接口
+ * 加载依赖
  *****************************************
  */
-import store from './store';
 import rAF from './rAF';
-import equal from './equal';
-import subscribe from './subscribe';
-import nextTick from './nextTick';
-import { useStore, observer } from './useStore';
 
 
 /**
  *****************************************
- * 抛出接口
+ * 等待下一帧
  *****************************************
  */
-export default store;
-export { store, useStore, observer, subscribe, rAF, equal, nextTick };
+export default function nextTick<T>(callback?: () => T): Promise<T> {
+    return new Promise(
+        resolve => rAF(() => resolve(callback && callback()))
+    );
+}

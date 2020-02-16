@@ -93,10 +93,11 @@ const task: Task = {
  */
 function invoke(): void {
     let list = task.list,
-        queue: Listener[] = [];
+        queue = new Set<Listener>();
 
-    // 更新监听列表
+    // 更新任务
     task.list = new Set();
+    task.cancel = undefined;
 
     // 遍历任务
     list.forEach(handler => {
@@ -104,7 +105,7 @@ function invoke(): void {
 
         // 添加队列
         if (listeners.length) {
-            queue = queue.concat(listeners);
+            listeners.forEach(cb => queue.add(cb));
         }
     });
 

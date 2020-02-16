@@ -20,13 +20,14 @@ import { Listener, addListener, removeListener } from './observer';
  * 订阅更新
  *****************************************
  */
-export default function subscribe(handler: () => void): () => void {
-    let cb: Listener = {};
+export default function subscribe(handler: (count: number) => void): () => void {
+    let cb: Listener = {},
+        count: 0;
 
     // 生成回调函数
     cb.handler = () => {
         addListener(cb);
-        handler();
+        handler(count ++);
         removeListener(cb);
     };
 
